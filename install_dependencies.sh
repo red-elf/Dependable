@@ -43,7 +43,7 @@ if test -e "$DEPENDENCIES"; then
       echo "Directory already exists: $WORKING_DIRECTORY"
       echo "Updating..."
       if cd "$WORKING_DIRECTORY" && git fetch && git pull && git submodule init && git submodule update && \
-        sh "$WORKING_DIRECTORY/Installable/install.sh"; then
+        sh "Installable/install.sh"; then
 
         echo "The dependency at '$WORKING_DIRECTORY' has been updated"
       else
