@@ -30,7 +30,8 @@ if test -e "$DEPENDENCIES"; then
 
       echo "Initializing the dependency to: $WORKING_DIRECTORY"
       if mkdir -p "$WORKING_DIRECTORY" && cd "$WORKING_DIRECTORY" && \
-        git clone --recurse-submodules "$DEPENDABLE_REPOSITORY" .; then
+        git clone --recurse-submodules "$DEPENDABLE_REPOSITORY" . && \
+        sh "Installable/install.sh"; then
 
         echo "The dependency initialized to: $WORKING_DIRECTORY"
       else
