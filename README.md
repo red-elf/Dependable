@@ -10,7 +10,7 @@ Define and install project dependencies.
 - For each dependency create a separate .sh file with the content that satisfies the required form
 - Execute: `sh Dependable/install.sh` from the root of your project
 
-## Dependency sh scripts
+## The dependency shell scripts
 
 Each dependency requires to satisfy the following form:
 
