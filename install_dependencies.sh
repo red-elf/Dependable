@@ -4,6 +4,8 @@ ABOUT="ABOUT.txt"
 DEPENDENCIES="Dependencies"
 DEPENDENCIES_WORKING_DIRECTORY="_Dependencies"
 
+# TODO: Support for the branch and the tag
+
 if test -e "$ABOUT"; then
 
   cat "$ABOUT"
