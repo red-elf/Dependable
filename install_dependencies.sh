@@ -28,10 +28,29 @@ if test -e "$DEPENDENCIES"; then
     WORKING_DIRECTORY="$DEPENDENCIES_WORKING_DIRECTORY/$DEPENDABLE_WORKING_DIRECTORY"
     if ! test -e "$WORKING_DIRECTORY"; then
 
-      mkdir -p "$WORKING_DIRECTORY"
+      echo "Initializing the dependency to: $WORKING_DIRECTORY"
+      if mkdir -p "$WORKING_DIRECTORY" && cd "$WORKING_DIRECTORY" && \
+        git clone --recurse-submodules "$DEPENDABLE_REPOSITORY" .; then
+
+        echo "The dependency initialized to: $WORKING_DIRECTORY"
+      else
+
+        echo "ERROR: Could not update the dependency at '$WORKING_DIRECTORY'"
+        exit 1
+      fi
     else
 
       echo "Directory already exists: $WORKING_DIRECTORY"
+      echo "Updating..."
+      if cd "$WORKING_DIRECTORY" && git fetch && git pull && git submodule init && git submodule update && \
+        sh "$WORKING_DIRECTORY/Installable/install.sh"; then
+
+        echo "The dependency at '$WORKING_DIRECTORY' has been updated"
+      else
+
+        echo "ERROR: Could not update the dependency at '$WORKING_DIRECTORY'"
+        exit 1
+      fi
     fi
   done
 else
