@@ -5,6 +5,7 @@ DEPENDENCIES="Dependencies"
 DEPENDENCIES_WORKING_DIRECTORY="_Dependencies"
 
 # TODO: Support for the branch and the tag
+# TODO: Compare the current and installed versions via the 'Versionable'
 
 if test -e "$ABOUT"; then
 
