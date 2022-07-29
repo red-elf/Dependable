@@ -2,11 +2,20 @@
 
 ABOUT="ABOUT.txt"
 DEPENDENCIES="Dependencies"
-DEPENDENCIES_WORKING_DIRECTORY="_Dependencies"
+
+if [ -z "$DEPENDABLE_DEPENDENCIES_HOME" ]; then
+
+  DEPENDABLE_DEPENDENCIES_HOME="$(pwd)"
+  export DEPENDABLE_DEPENDENCIES_HOME
+fi
+
+echo "The dependencies home directory: '$DEPENDABLE_DEPENDENCIES_HOME'"
 
 INSTALL_SCRIPT="Installable/install.sh"
 CURRENT_SCRIPT="Versionable/current.sh"
 INSTALLED_SCRIPT="Versionable/installed.sh"
+
+DEPENDENCIES_WORKING_DIRECTORY="$DEPENDABLE_DEPENDENCIES_HOME/_Dependencies"
 
 function GET_VERSIONS {
 
