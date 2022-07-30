@@ -104,7 +104,7 @@ if test -e "$DEPENDENCIES"; then
         fi
       fi
 
-      if "$CLONE" == true; then
+      if "$CLONE" = true; then
 
         if mkdir -p "$WORKING_DIRECTORY" && cd "$WORKING_DIRECTORY" &&
           git clone --recurse-submodules "$DEPENDABLE_REPOSITORY" .; then
