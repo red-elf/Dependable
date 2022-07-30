@@ -62,31 +62,98 @@ if test -e "$DEPENDENCIES"; then
 
       echo "Initializing the dependency to: '$WORKING_DIRECTORY'"
 
-      if mkdir -p "$WORKING_DIRECTORY" && cd "$WORKING_DIRECTORY" &&
-        git clone --recurse-submodules "$DEPENDABLE_REPOSITORY" .; then
+      CLONE=true
+      if [ -z "$DEPENDABLE_PARENT_REPOSITORY" ]; then
 
-        GET_VERSIONS
+        DEPENDABLE_PARENT_REPOSITORY="$DEPENDABLE_REPOSITORY"
+        DEPENDABLE_PARENT_BRANCH="$DEPENDABLE_BRANCH"
+        DEPENDABLE_PARENT_TAG="$DEPENDABLE_TAG"
 
-        echo "Current: '$CURRENT'"
-        echo "Installed: '$INSTALLED'"
+        export DEPENDABLE_PARENT_REPOSITORY
+        export DEPENDABLE_PARENT_BRANCH
+        export DEPENDABLE_PARENT_TAG
 
-        if [[ "$INSTALLED" == "$CURRENT" ]]; then
+        echo "Parent repository set to: '$DEPENDABLE_PARENT_REPOSITORY'"
+        echo "Parent branch set to: '$DEPENDABLE_PARENT_REPOSITORY'"
+        echo "Parent tag set to: '$DEPENDABLE_PARENT_REPOSITORY'"
 
-          echo "The '$i' is already installed, version: $CURRENT"
-        else
-
-          if sh "$INSTALL_SCRIPT"; then
-
-            echo "The dependency initialized to: '$WORKING_DIRECTORY'"
-          else
-
-            echo "ERROR: The dependency was NOT initialized to: '$WORKING_DIRECTORY'"
-          fi
-        fi
       else
 
-        echo "ERROR: Could not initialize the dependency to '$WORKING_DIRECTORY'"
-        exit 1
+        if "$DEPENDABLE_PARENT_REPOSITORY" == "$DEPENDABLE_REPOSITORY"; then
+
+          CLONE=false
+
+          echo "Parent repository information is available, parent repository is: '$DEPENDABLE_PARENT_REPOSITORY'"
+
+          if [ -z "$DEPENDABLE_PARENT_BRANCH" ]; then
+
+            if [ -n "$DEPENDABLE_PARENT_TAG" ]; then
+
+              if ! "$DEPENDABLE_PARENT_TAG" == "$DEPENDABLE_TAG"; then
+
+                CLONE=true
+              fi
+            fi
+          else
+
+            if ! "$DEPENDABLE_PARENT_BRANCH" == "$DEPENDABLE_BRANCH"; then
+
+              CLONE=true
+            fi
+          fi
+        fi
+      fi
+
+      if "$CLONE" == true; then
+
+        if mkdir -p "$WORKING_DIRECTORY" && cd "$WORKING_DIRECTORY" &&
+          git clone --recurse-submodules "$DEPENDABLE_REPOSITORY" .; then
+
+          if [ -n "$DEPENDABLE_BRANCH" ]; then
+
+            if ! git checkout "$DEPENDABLE_BRANCH"; then
+
+              echo "ERROR: Could not checkout the branch: '$DEPENDABLE_BRANCH'"
+              exit 1
+            fi
+          else
+
+            if ! git checkout "$DEPENDABLE_TAG"; then
+
+              echo "ERROR: Could not checkout the tag: '$DEPENDABLE_TAG'"
+              exit 1
+            fi
+          fi
+
+          GET_VERSIONS
+
+          echo "Current: '$CURRENT'"
+          echo "Installed: '$INSTALLED'"
+
+          if [[ "$INSTALLED" == "$CURRENT" ]]; then
+
+            echo "The '$i' is already installed, version: $CURRENT"
+          else
+
+            if sh "$INSTALL_SCRIPT"; then
+
+              echo "The dependency initialized to: '$WORKING_DIRECTORY'"
+
+            else
+
+              echo "ERROR: The dependency was NOT initialized to: '$WORKING_DIRECTORY'"
+              exit 1
+            fi
+          fi
+        else
+
+          echo "ERROR: Could not initialize the dependency to '$WORKING_DIRECTORY'"
+          exit 1
+        fi
+
+      else
+
+        echo "WARNING: The repository will not be cloned to avoid the circular dependency issue"
       fi
 
     else
@@ -111,9 +178,11 @@ if test -e "$DEPENDENCIES"; then
           if sh "$INSTALL_SCRIPT"; then
 
             echo "The dependency at '$WORKING_DIRECTORY' has been updated"
+
           else
 
             echo "ERROR: The dependency at '$WORKING_DIRECTORY' has NOT been updated"
+            exit 1
           fi
         fi
 
