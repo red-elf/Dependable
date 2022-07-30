@@ -26,11 +26,11 @@ if [ -z "$DEPENDABLE_PARENT_REPOSITORY" ]; then
   export DEPENDABLE_PARENT_REPOSITORY
   export DEPENDABLE_PARENT_BRANCH
   export DEPENDABLE_PARENT_TAG
-
-  echo "Parent repository set to: '$DEPENDABLE_PARENT_REPOSITORY'"
-  echo "Parent branch set to: '$DEPENDABLE_PARENT_BRANCH'"
-  echo "Parent tag set to: '$DEPENDABLE_PARENT_TAG'"
 fi
+
+echo "Parent repository set to: '$DEPENDABLE_PARENT_REPOSITORY'"
+echo "Parent branch set to: '$DEPENDABLE_PARENT_BRANCH'"
+echo "Parent tag set to: '$DEPENDABLE_PARENT_TAG'"
 
 function GET_VERSIONS {
 
