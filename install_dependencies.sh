@@ -96,7 +96,7 @@ if test -e "$DEPENDENCIES"; then
             fi
           else
 
-            if ! [[ "$DEPENDABLE_PARENT_BRANCH" == "$DEPENDABLE_BRANCH" ]]]; then
+            if ! [[ "$DEPENDABLE_PARENT_BRANCH" == "$DEPENDABLE_BRANCH" ]]; then
 
               CLONE=true
             fi
