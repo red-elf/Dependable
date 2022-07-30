@@ -74,12 +74,12 @@ if test -e "$DEPENDENCIES"; then
         export DEPENDABLE_PARENT_TAG
 
         echo "Parent repository set to: '$DEPENDABLE_PARENT_REPOSITORY'"
-        echo "Parent branch set to: '$DEPENDABLE_PARENT_REPOSITORY'"
-        echo "Parent tag set to: '$DEPENDABLE_PARENT_REPOSITORY'"
+        echo "Parent branch set to: '$DEPENDABLE_PARENT_BRANCH'"
+        echo "Parent tag set to: '$DEPENDABLE_PARENT_TAG'"
 
       else
 
-        if "$DEPENDABLE_PARENT_REPOSITORY" == "$DEPENDABLE_REPOSITORY"; then
+        if [[ "$DEPENDABLE_PARENT_REPOSITORY" == "$DEPENDABLE_REPOSITORY" ]]; then
 
           CLONE=false
 
@@ -89,14 +89,14 @@ if test -e "$DEPENDENCIES"; then
 
             if [ -n "$DEPENDABLE_PARENT_TAG" ]; then
 
-              if ! "$DEPENDABLE_PARENT_TAG" == "$DEPENDABLE_TAG"; then
+              if ! [[ "$DEPENDABLE_PARENT_TAG" == "$DEPENDABLE_TAG" ]]; then
 
                 CLONE=true
               fi
             fi
           else
 
-            if ! "$DEPENDABLE_PARENT_BRANCH" == "$DEPENDABLE_BRANCH"; then
+            if ! [[ "$DEPENDABLE_PARENT_BRANCH" == "$DEPENDABLE_BRANCH" ]]]; then
 
               CLONE=true
             fi
