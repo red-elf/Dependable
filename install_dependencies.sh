@@ -17,6 +17,21 @@ INSTALLED_SCRIPT="Versionable/installed.sh"
 
 DEPENDENCIES_WORKING_DIRECTORY="$DEPENDABLE_DEPENDENCIES_HOME/_Dependencies"
 
+if [ -z "$DEPENDABLE_PARENT_REPOSITORY" ]; then
+
+  DEPENDABLE_PARENT_REPOSITORY="$(git config --get remote.origin.url)"
+  DEPENDABLE_PARENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+  DEPENDABLE_PARENT_TAG="$(git describe --tags --abbrev=0)"
+
+  export DEPENDABLE_PARENT_REPOSITORY
+  export DEPENDABLE_PARENT_BRANCH
+  export DEPENDABLE_PARENT_TAG
+
+  echo "Parent repository set to: '$DEPENDABLE_PARENT_REPOSITORY'"
+  echo "Parent branch set to: '$DEPENDABLE_PARENT_BRANCH'"
+  echo "Parent tag set to: '$DEPENDABLE_PARENT_TAG'"
+fi
+
 function GET_VERSIONS {
 
   if ! test -e "$CURRENT_SCRIPT"; then
@@ -60,51 +75,35 @@ if test -e "$DEPENDENCIES"; then
     WORKING_DIRECTORY="$DEPENDENCIES_WORKING_DIRECTORY/$DEPENDABLE_WORKING_DIRECTORY"
     if ! test -e "$WORKING_DIRECTORY"; then
 
-      echo "Initializing the dependency to: '$WORKING_DIRECTORY'"
-
       CLONE=true
-      if [ -z "$DEPENDABLE_PARENT_REPOSITORY" ]; then
 
-        DEPENDABLE_PARENT_REPOSITORY="$DEPENDABLE_REPOSITORY"
-        DEPENDABLE_PARENT_BRANCH="$DEPENDABLE_BRANCH"
-        DEPENDABLE_PARENT_TAG="$DEPENDABLE_TAG"
+      if [[ "$DEPENDABLE_PARENT_REPOSITORY" == "$DEPENDABLE_REPOSITORY" ]]; then
 
-        export DEPENDABLE_PARENT_REPOSITORY
-        export DEPENDABLE_PARENT_BRANCH
-        export DEPENDABLE_PARENT_TAG
+        CLONE=false
 
-        echo "Parent repository set to: '$DEPENDABLE_PARENT_REPOSITORY'"
-        echo "Parent branch set to: '$DEPENDABLE_PARENT_BRANCH'"
-        echo "Parent tag set to: '$DEPENDABLE_PARENT_TAG'"
+        echo "Parent repository information is available, parent repository is: '$DEPENDABLE_PARENT_REPOSITORY'"
 
-      else
+        if [ -z "$DEPENDABLE_PARENT_BRANCH" ]; then
 
-        if [[ "$DEPENDABLE_PARENT_REPOSITORY" == "$DEPENDABLE_REPOSITORY" ]]; then
+          if [ -n "$DEPENDABLE_PARENT_TAG" ]; then
 
-          CLONE=false
-
-          echo "Parent repository information is available, parent repository is: '$DEPENDABLE_PARENT_REPOSITORY'"
-
-          if [ -z "$DEPENDABLE_PARENT_BRANCH" ]; then
-
-            if [ -n "$DEPENDABLE_PARENT_TAG" ]; then
-
-              if ! [[ "$DEPENDABLE_PARENT_TAG" == "$DEPENDABLE_TAG" ]]; then
-
-                CLONE=true
-              fi
-            fi
-          else
-
-            if ! [[ "$DEPENDABLE_PARENT_BRANCH" == "$DEPENDABLE_BRANCH" ]]; then
+            if ! [[ "$DEPENDABLE_PARENT_TAG" == "$DEPENDABLE_TAG" ]]; then
 
               CLONE=true
             fi
+          fi
+        else
+
+          if ! [[ "$DEPENDABLE_PARENT_BRANCH" == "$DEPENDABLE_BRANCH" ]]; then
+
+            CLONE=true
           fi
         fi
       fi
 
       if "$CLONE" = true; then
+
+        echo "Initializing the dependency to: '$WORKING_DIRECTORY'"
 
         if mkdir -p "$WORKING_DIRECTORY" && cd "$WORKING_DIRECTORY" &&
           git clone --recurse-submodules "$DEPENDABLE_REPOSITORY" .; then
