@@ -55,7 +55,18 @@ if ! test -e "$DEPENDENCIES_PROCESSED"; then
 
   FORMAT_DEPENDENCY "$DEPENDABLE_PARENT_REPOSITORY" "$DEPENDABLE_PARENT_BRANCH" "$DEPENDABLE_PARENT_TAG"
 
-  echo "$FORMATTED_DEPENDENCY" > "$DEPENDENCIES_PROCESSED"
+  if ! test -e "$DEPENDENCIES_PROCESSED"; then
+
+    mkdir -p "$DEPENDENCIES_WORKING_DIRECTORY" && touch "$DEPENDENCIES_PROCESSED"
+  fi
+
+  if ! test -e "$DEPENDENCIES_PROCESSED"; then
+
+    echo "ERROR: '$DEPENDENCIES_PROCESSED' does not exist"
+    exit 1
+  fi
+
+  echo "$FORMATTED_DEPENDENCY" >"$DEPENDENCIES_PROCESSED"
 fi
 
 if test -e "$ABOUT"; then
@@ -94,7 +105,7 @@ if test -e "$DEPENDENCIES"; then
 
       else
 
-        echo "$FORMATTED_DEPENDENCY" >> "$DEPENDENCIES_PROCESSED"
+        echo "$FORMATTED_DEPENDENCY" >>"$DEPENDENCIES_PROCESSED"
       fi
 
       if "$CLONE" = true; then
