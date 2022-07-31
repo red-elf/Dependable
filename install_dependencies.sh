@@ -47,7 +47,7 @@ function FORMAT_DEPENDENCY {
   export FORMATTED_DEPENDENCY
 }
 
-if [ -z "$DEPENDABLE_PARENT_REPOSITORY" ]; then
+if ! test -e "$DEPENDENCIES_PROCESSED"; then
 
   DEPENDABLE_PARENT_REPOSITORY="$(git config --get remote.origin.url)"
   DEPENDABLE_PARENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
