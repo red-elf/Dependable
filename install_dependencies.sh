@@ -16,21 +16,7 @@ CURRENT_SCRIPT="Versionable/current.sh"
 INSTALLED_SCRIPT="Versionable/installed.sh"
 
 DEPENDENCIES_WORKING_DIRECTORY="$DEPENDABLE_DEPENDENCIES_HOME/_Dependencies"
-
-if [ -z "$DEPENDABLE_PARENT_REPOSITORY" ]; then
-
-  DEPENDABLE_PARENT_REPOSITORY="$(git config --get remote.origin.url)"
-  DEPENDABLE_PARENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-  DEPENDABLE_PARENT_TAG="$(git describe --tags --abbrev=0)"
-
-  export DEPENDABLE_PARENT_REPOSITORY
-  export DEPENDABLE_PARENT_BRANCH
-  export DEPENDABLE_PARENT_TAG
-fi
-
-echo "Parent repository set to: '$DEPENDABLE_PARENT_REPOSITORY'"
-echo "Parent branch set to: '$DEPENDABLE_PARENT_BRANCH'"
-echo "Parent tag set to: '$DEPENDABLE_PARENT_TAG'"
+DEPENDENCIES_PROCESSED="$DEPENDENCIES_WORKING_DIRECTORY/processed_dependencies.txt"
 
 function GET_VERSIONS {
 
@@ -49,6 +35,28 @@ function GET_VERSIONS {
   CURRENT="$(sh "$CURRENT_SCRIPT")"
   INSTALLED="$(sh "$INSTALLED_SCRIPT")"
 }
+
+function FORMAT_DEPENDENCY {
+
+  REPO="$1"
+  BRANCH="$2"
+  TAG=$3
+
+  FORMATTED_DEPENDENCY="repo:$REPO/branch:$BRANCH/tag:$TAG"
+  echo "Formatted dependency: $FORMATTED_DEPENDENCY"
+  export FORMATTED_DEPENDENCY
+}
+
+if [ -z "$DEPENDABLE_PARENT_REPOSITORY" ]; then
+
+  DEPENDABLE_PARENT_REPOSITORY="$(git config --get remote.origin.url)"
+  DEPENDABLE_PARENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+  DEPENDABLE_PARENT_TAG="$(git describe --tags --abbrev=0)"
+
+  FORMAT_DEPENDENCY "$DEPENDABLE_PARENT_REPOSITORY" "$DEPENDABLE_PARENT_BRANCH" "$DEPENDABLE_PARENT_TAG"
+
+  echo "$FORMATTED_DEPENDENCY" > "$DEPENDENCIES_PROCESSED"
+fi
 
 if test -e "$ABOUT"; then
 
@@ -77,28 +85,16 @@ if test -e "$DEPENDENCIES"; then
 
       CLONE=true
 
-      if [[ "$DEPENDABLE_PARENT_REPOSITORY" == "$DEPENDABLE_REPOSITORY" ]]; then
+      FORMAT_DEPENDENCY "$DEPENDABLE_REPOSITORY" "$DEPENDABLE_BRANCH" "$DEPENDABLE_TAG"
+
+      # shellcheck disable=SC2002
+      if cat "$DEPENDENCIES_PROCESSED" | grep "$FORMATTED_DEPENDENCY"; then
 
         CLONE=false
 
-        echo "Parent repository information is available, parent repository is: '$DEPENDABLE_PARENT_REPOSITORY'"
+      else
 
-        if [ -z "$DEPENDABLE_PARENT_BRANCH" ]; then
-
-          if [ -n "$DEPENDABLE_PARENT_TAG" ]; then
-
-            if ! [[ "$DEPENDABLE_PARENT_TAG" == "$DEPENDABLE_TAG" ]]; then
-
-              CLONE=true
-            fi
-          fi
-        else
-
-          if ! [[ "$DEPENDABLE_PARENT_BRANCH" == "$DEPENDABLE_BRANCH" ]]; then
-
-            CLONE=true
-          fi
-        fi
+        echo "$FORMATTED_DEPENDENCY" >> "$DEPENDENCIES_PROCESSED"
       fi
 
       if "$CLONE" = true; then
