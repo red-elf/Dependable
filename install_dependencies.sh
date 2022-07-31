@@ -105,7 +105,7 @@ if test -e "$DEPENDENCIES"; then
 
       else
 
-        echo "$FORMATTED_DEPENDENCY" >> "$DEPENDENCIES_PROCESSED"
+        echo "$FORMATTED_DEPENDENCY" >>"$DEPENDENCIES_PROCESSED"
       fi
 
       if "$CLONE" = true; then
@@ -134,23 +134,29 @@ if test -e "$DEPENDENCIES"; then
           GET_VERSIONS
 
           echo "Current: '$CURRENT'"
-          echo "Installed: '$INSTALLED'"
+          echo "Installed: "
+          echo "$INSTALLED"
 
-          if [[ "$INSTALLED" == "$CURRENT" ]]; then
+          IFS='
+          '
+          for ITEM in $INSTALLED; do
 
-            echo "The '$i' is already installed, version: $CURRENT"
-          else
+            if [[ "$ITEM" == "$CURRENT" ]]; then
 
-            if sh "$INSTALL_SCRIPT"; then
-
-              echo "The dependency initialized to: '$WORKING_DIRECTORY'"
-
+              echo "The '$ITEM' is already installed, version: $CURRENT"
             else
 
-              echo "ERROR: The dependency was NOT initialized to: '$WORKING_DIRECTORY'"
-              exit 1
+              if sh "$INSTALL_SCRIPT"; then
+
+                echo "The dependency initialized to: '$WORKING_DIRECTORY'"
+
+              else
+
+                echo "ERROR: The dependency was NOT initialized to: '$WORKING_DIRECTORY'"
+                exit 1
+              fi
             fi
-          fi
+          done
         else
 
           echo "ERROR: Could not initialize the dependency to '$WORKING_DIRECTORY'"
