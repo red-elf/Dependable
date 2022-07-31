@@ -105,7 +105,7 @@ if test -e "$DEPENDENCIES"; then
 
       else
 
-        echo "$FORMATTED_DEPENDENCY" >>"$DEPENDENCIES_PROCESSED"
+        echo "$FORMATTED_DEPENDENCY" >> "$DEPENDENCIES_PROCESSED"
       fi
 
       if "$CLONE" = true; then
