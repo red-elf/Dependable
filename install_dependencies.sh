@@ -179,6 +179,7 @@ if test -e "$DEPENDENCIES"; then
         echo "Current: '$CURRENT'"
         echo "Installed: '$INSTALLED'"
 
+        # TODO: Handle the SNAPSHOT version
         if [[ "$INSTALLED" == "$CURRENT" ]]; then
 
           echo "The '$i' is already installed, version: $CURRENT"
