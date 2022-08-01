@@ -177,7 +177,8 @@ if test -e "$DEPENDENCIES"; then
         GET_VERSIONS
 
         echo "Current: '$CURRENT'"
-        echo "Installed: '$INSTALLED'"
+        echo "Installed:"
+        echo "$INSTALLED"
 
         if [[ "$INSTALLED" == "$CURRENT" ]] && ! [[ "$CURRENT" == *"-SNAPSHOT"* ]] ; then
 
