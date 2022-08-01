@@ -180,6 +180,8 @@ if test -e "$DEPENDENCIES"; then
         echo "Installed:"
         echo "$INSTALLED"
 
+        # FIXME: Iterate through the installed!
+
         if [[ "$INSTALLED" == "$CURRENT" ]] && ! [[ "$CURRENT" == *"-SNAPSHOT"* ]] ; then
 
           echo "The '$i' is already installed, version: $CURRENT"
