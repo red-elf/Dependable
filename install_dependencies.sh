@@ -68,8 +68,6 @@ if ! test -e "$DEPENDENCIES_PROCESSED"; then
   echo "$FORMATTED_DEPENDENCY" >"$DEPENDENCIES_PROCESSED"
 fi
 
-echo "Dependencies installation started"
-
 if test -e "$DEPENDENCIES"; then
 
   echo "Installing the dependencies"
