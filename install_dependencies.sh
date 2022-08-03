@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ABOUT="ABOUT.txt"
 DEPENDENCIES="Dependencies"
 
 if [ -z "$DEPENDABLE_DEPENDENCIES_HOME" ]; then
@@ -69,11 +68,7 @@ if ! test -e "$DEPENDENCIES_PROCESSED"; then
   echo "$FORMATTED_DEPENDENCY" >"$DEPENDENCIES_PROCESSED"
 fi
 
-if test -e "$ABOUT"; then
-
-  cat "$ABOUT"
-  echo "Dependencies installation started"
-fi
+echo "Dependencies installation started"
 
 if test -e "$DEPENDENCIES"; then
 
