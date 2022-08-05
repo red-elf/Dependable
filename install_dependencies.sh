@@ -38,9 +38,27 @@ function GET_VERSIONS {
 
 function UNSET_DEPENDABLE_VARIABLES {
 
-  export DEPENDABLE_TAG=""
-  export DEPENDABLE_BRANCH=""
-  export DEPENDABLE_REPOSITORY=""
+  unset DEPENDABLE_TAG
+  unset DEPENDABLE_BRANCH
+  unset DEPENDABLE_REPOSITORY
+
+  if [ -n "$DEPENDABLE_TAG" ]; then
+
+    echo "ERROR: The DEPENDABLE_TAG environment variable is still set"
+    exit 1
+  fi
+
+  if [ -n "$DEPENDABLE_BRANCH" ]; then
+
+    echo "ERROR: The DEPENDABLE_BRANCH environment variable is still set"
+    exit 1
+  fi
+
+  if [ -n "$DEPENDABLE_REPOSITORY" ]; then
+
+    echo "ERROR: The DEPENDABLE_REPOSITORY environment variable is still set"
+    exit 1
+  fi
 }
 
 function FORMAT_DEPENDENCY {
@@ -163,7 +181,8 @@ if test -e "$DEPENDENCIES"; then
 
             if [[ "$ITEM" == "$CURRENT" ]]; then
 
-              echo "The '$ITEM' is already installed, version: $CURRENT"
+              cd "$HERE" && \
+                echo "The '$ITEM' is already installed, version: $CURRENT"
             else
 
               if sh "$INSTALL_SCRIPT"; then
@@ -205,7 +224,8 @@ if test -e "$DEPENDENCIES"; then
 
             if [[ "$INSTALLED" == *"$CURRENT"* ]] && ! [[ "$CURRENT" == *"-SNAPSHOT"* ]] ; then
 
-              echo "The '$i' is already installed, version: $CURRENT"
+              cd "$HERE" && \
+                echo "The '$i' is already installed, version: $CURRENT"
 
             else
 
