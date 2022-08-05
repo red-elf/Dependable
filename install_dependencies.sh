@@ -10,6 +10,7 @@ fi
 
 echo "The dependencies home directory: '$DEPENDABLE_DEPENDENCIES_HOME'"
 
+HERE="$(pwd)"
 INSTALL_SCRIPT="Installable/install.sh"
 CURRENT_SCRIPT="Versionable/current.sh"
 INSTALLED_SCRIPT="Versionable/installed.sh"
@@ -158,7 +159,8 @@ if test -e "$DEPENDENCIES"; then
 
               if sh "$INSTALL_SCRIPT"; then
 
-                echo "The dependency initialized to: '$WORKING_DIRECTORY'"
+                cd "$HERE" && \
+                  echo "The dependency initialized to: '$WORKING_DIRECTORY'"
 
               else
 
@@ -202,7 +204,8 @@ if test -e "$DEPENDENCIES"; then
 
               if sh "$INSTALL_SCRIPT"; then
 
-                echo "The dependency at '$WORKING_DIRECTORY' has been updated"
+                cd "$HERE" && \
+                  echo "The dependency at '$WORKING_DIRECTORY' has been updated"
 
               else
 
