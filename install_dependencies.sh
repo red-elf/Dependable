@@ -147,6 +147,7 @@ if test -e "$DEPENDENCIES"; then
 
           if [ -n "$DEPENDABLE_BRANCH" ]; then
 
+            echo "We are about to checkout the branch: '$DEPENDABLE_BRANCH'"
             if ! git checkout "$DEPENDABLE_BRANCH"; then
 
               echo "ERROR: Could not checkout the branch: '$DEPENDABLE_BRANCH'"
@@ -162,10 +163,14 @@ if test -e "$DEPENDENCIES"; then
               fi
             fi
 
-            if ! git checkout "$DEPENDABLE_TAG"; then
+            if [ -n "$DEPENDABLE_TAG" ]; then
 
-              echo "ERROR: Could not checkout the tag: '$DEPENDABLE_TAG'"
-              exit 1
+              echo "We are about to checkout the tag: '$DEPENDABLE_TAG'"
+              if ! git checkout "$DEPENDABLE_TAG"; then
+
+                echo "ERROR: Could not checkout the tag: '$DEPENDABLE_TAG'"
+                exit 1
+              fi
             fi
           fi
 
