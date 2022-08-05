@@ -73,8 +73,17 @@ if test -e "$DEPENDENCIES"; then
   echo "Installing the dependencies"
   for i in "$DEPENDENCIES"/*.sh; do
 
-    # shellcheck disable=SC1090
-    . "$i"
+    if test -e "$i"; then
+
+      # shellcheck disable=SC1090
+      . "$i"
+
+    else
+
+      echo "ERROR: '$i' not found at: '$(pwd)'"
+      exit 1
+    fi
+
     echo "Dependency: '$i'"
     echo "Dependency tag: $DEPENDABLE_TAG"
     echo "Dependency branch: $DEPENDABLE_BRANCH"
