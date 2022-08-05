@@ -126,6 +126,14 @@ if test -e "$DEPENDENCIES"; then
             fi
           else
 
+            if ! git checkout main; then
+              if ! git checkout master; then
+
+                echo "ERROR: Failed to checkout the main branch before checking out the tag: '$DEPENDABLE_TAG'"
+                exit 1;
+              fi
+            fi
+
             if ! git checkout "$DEPENDABLE_TAG"; then
 
               echo "ERROR: Could not checkout the tag: '$DEPENDABLE_TAG'"
@@ -174,37 +182,44 @@ if test -e "$DEPENDENCIES"; then
 
       echo "The dependency ALREADY initialized to: '$WORKING_DIRECTORY'"
 
-      if cd "$WORKING_DIRECTORY" && git fetch && git pull && git submodule init && git submodule update; then
+      if [ -z "$DEPENDABLE_TAG" ]; then
 
-        GET_VERSIONS
+        if cd "$WORKING_DIRECTORY" && git fetch && git pull && git submodule init && git submodule update; then
 
-        echo "Current: '$CURRENT'"
-        echo "Installed:"
-        echo "$INSTALLED"
+            GET_VERSIONS
 
-        if [[ "$INSTALLED" == *"$CURRENT"* ]] && ! [[ "$CURRENT" == *"-SNAPSHOT"* ]] ; then
+            echo "Current: '$CURRENT'"
+            echo "Installed:"
+            echo "$INSTALLED"
 
-          echo "The '$i' is already installed, version: $CURRENT"
+            if [[ "$INSTALLED" == *"$CURRENT"* ]] && ! [[ "$CURRENT" == *"-SNAPSHOT"* ]] ; then
 
-        else
+              echo "The '$i' is already installed, version: $CURRENT"
 
-          echo "Updating..."
+            else
 
-          if sh "$INSTALL_SCRIPT"; then
+              echo "Updating..."
 
-            echo "The dependency at '$WORKING_DIRECTORY' has been updated"
+              if sh "$INSTALL_SCRIPT"; then
+
+                echo "The dependency at '$WORKING_DIRECTORY' has been updated"
+
+              else
+
+                echo "ERROR: The dependency at '$WORKING_DIRECTORY' has NOT been updated"
+                exit 1
+              fi
+            fi
 
           else
 
-            echo "ERROR: The dependency at '$WORKING_DIRECTORY' has NOT been updated"
+            echo "ERROR: Could not update the dependency at '$WORKING_DIRECTORY'"
             exit 1
           fi
-        fi
 
       else
 
-        echo "ERROR: Could not update the dependency at '$WORKING_DIRECTORY'"
-        exit 1
+        echo "We are on the tag: '$DEPENDABLE_TAG'"
       fi
     fi
   done
