@@ -36,6 +36,13 @@ function GET_VERSIONS {
   INSTALLED="$(sh "$INSTALLED_SCRIPT")"
 }
 
+function UNSET_DEPENDABLE_VARIABLES {
+
+  export DEPENDABLE_TAG=""
+  export DEPENDABLE_BRANCH=""
+  export DEPENDABLE_REPOSITORY=""
+}
+
 function FORMAT_DEPENDENCY {
 
   REPO="$1"
@@ -73,6 +80,8 @@ if test -e "$DEPENDENCIES"; then
 
   echo "Installing the dependencies"
   for i in "$DEPENDENCIES"/*.sh; do
+
+    UNSET_DEPENDABLE_VARIABLES
 
     if test -e "$i"; then
 
