@@ -262,6 +262,5 @@ if test -e "$DEPENDENCIES"; then
   done
 else
 
-  echo "ERROR: '$DEPENDENCIES' installation directory does not exist"
-  exit 1
+  echo "No dependencies to process"
 fi
