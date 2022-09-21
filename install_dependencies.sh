@@ -14,6 +14,7 @@ HERE="$(pwd)"
 INSTALL_SCRIPT="Installable/install.sh"
 CURRENT_SCRIPT="Versionable/current.sh"
 INSTALLED_SCRIPT="Versionable/installed.sh"
+UPSTREAMS_SCRIPT="Upstreamable/install_upstreams.sh"
 
 DEPENDENCIES_WORKING_DIRECTORY="$DEPENDABLE_DEPENDENCIES_HOME/_Dependencies"
 DEPENDENCIES_PROCESSED="$DEPENDENCIES_WORKING_DIRECTORY/processed_dependencies.txt"
@@ -190,6 +191,22 @@ if test -e "$DEPENDENCIES"; then
                 echo "The '$ITEM' is already installed, version: $CURRENT"
             else
 
+              if test -e "$UPSTREAMS_SCRIPT"; then
+
+                if test -e "Upstreams"; then
+
+                  if sh "$UPSTREAMS_SCRIPT"; then
+
+                    echo "Upstreamable completed"
+
+                  else
+
+                    echo "ERROR: Upstreamable failed"
+                    exit 1
+                  fi
+                fi
+              fi
+
               if sh "$INSTALL_SCRIPT"; then
 
                 cd "$HERE" && \
@@ -235,6 +252,22 @@ if test -e "$DEPENDENCIES"; then
             else
 
               echo "Updating..."
+
+              if test -e "$UPSTREAMS_SCRIPT"; then
+
+                if test -e "Upstreams"; then
+
+                  if sh "$UPSTREAMS_SCRIPT"; then
+
+                    echo "Upstreamable completed"
+
+                  else
+
+                    echo "ERROR: Upstreamable failed"
+                    exit 1
+                  fi
+                fi
+              fi
 
               if sh "$INSTALL_SCRIPT"; then
 
