@@ -1,6 +1,38 @@
 #!/bin/bash
 
+HERE="$(pwd)"
 DEPENDENCIES="Dependencies"
+DIR_HOME=$(eval echo ~"$USER")
+FILE_ZSH_RC="$DIR_HOME/.zshrc"
+FILE_BASH_RC="$DIR_HOME/.bashrc"
+
+FILE_RC=""
+    
+if test -e "$FILE_ZSH_RC"; then
+
+  FILE_RC="$FILE_ZSH_RC"
+
+else
+
+    if test -e "$FILE_BASH_RC"; then
+
+      FILE_RC="$FILE_BASH_RC"
+
+    else
+
+      echo "ERROR: No '$FILE_ZSH_RC' or '$FILE_BASH_RC' found on the system"
+      exit 1
+    fi
+fi
+
+# shellcheck disable=SC1090
+. "$FILE_RC" >/dev/null 2>&1
+
+if [ -z "$SUBMODULES_HOME" ]; then
+
+  echo "ERROR: The SUBMODULES_HOME is not defined"
+  exit 1
+fi
 
 if [ -z "$DEPENDABLE_DEPENDENCIES_HOME" ]; then
 
@@ -8,13 +40,36 @@ if [ -z "$DEPENDABLE_DEPENDENCIES_HOME" ]; then
   export DEPENDABLE_DEPENDENCIES_HOME
 fi
 
-echo "The dependencies home directory: '$DEPENDABLE_DEPENDENCIES_HOME'"
+INSTALL_SCRIPT="$SUBMODULES_HOME/Installable/install.sh"
+CURRENT_SCRIPT="$SUBMODULES_HOME/Versionable/current.sh"
+INSTALLED_SCRIPT="$SUBMODULES_HOME/Versionable/installed.sh"
+UPSTREAMS_SCRIPT="$SUBMODULES_HOME/Upstreamable/install_upstreams.sh"
 
-HERE="$(pwd)"
-INSTALL_SCRIPT="Installable/install.sh"
-CURRENT_SCRIPT="Versionable/current.sh"
-INSTALLED_SCRIPT="Versionable/installed.sh"
-UPSTREAMS_SCRIPT="Upstreamable/install_upstreams.sh"
+if ! test -e "$INSTALL_SCRIPT"; then
+
+    echo "ERROR: Script not found '$INSTALL_SCRIPT'"
+    exit 1
+fi
+
+if ! test -e "$CURRENT_SCRIPT"; then
+
+    echo "ERROR: Script not found '$CURRENT_SCRIPT'"
+    exit 1
+fi
+
+if ! test -e "$INSTALLED_SCRIPT"; then
+
+    echo "ERROR: Script not found '$INSTALLED_SCRIPT'"
+    exit 1
+fi
+
+if ! test -e "$UPSTREAMS_SCRIPT"; then
+
+    echo "ERROR: Script not found '$UPSTREAMS_SCRIPT'"
+    exit 1
+fi
+
+echo "The dependencies home directory: '$DEPENDABLE_DEPENDENCIES_HOME'"
 
 DEPENDENCIES_WORKING_DIRECTORY="$DEPENDABLE_DEPENDENCIES_HOME/_Dependencies"
 DEPENDENCIES_PROCESSED="$DEPENDENCIES_WORKING_DIRECTORY/processed_dependencies.txt"
