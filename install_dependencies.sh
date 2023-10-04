@@ -240,7 +240,7 @@ if test -e "$DEPENDENCIES"; then
           '
           for ITEM in $INSTALLED; do
 
-            if [[ "$ITEM" == "$CURRENT" ]]; then
+            if [ "$ITEM" = "$CURRENT" ]; then
 
               cd "$HERE" && \
                 echo "The '$ITEM' is already installed, version: $CURRENT"
