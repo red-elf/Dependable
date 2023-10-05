@@ -153,6 +153,7 @@ fi
 if test -e "$DEPENDENCIES"; then
 
   echo "Installing the dependencies"
+  
   for i in "$DEPENDENCIES"/*.sh; do
 
     UNSET_DEPENDABLE_VARIABLES
@@ -164,8 +165,8 @@ if test -e "$DEPENDENCIES"; then
 
     else
 
-      echo "ERROR: '$i' not found at: '$(pwd)'"
-      exit 1
+      echo "WARNING: No dependencies defined at '$(pwd)'"
+      exit 0
     fi
 
     echo "Dependency: '$i'"
@@ -173,8 +174,28 @@ if test -e "$DEPENDENCIES"; then
     echo "Dependency branch: $DEPENDABLE_BRANCH"
     echo "Dependency repository: $DEPENDABLE_REPOSITORY"
 
-    TO_REPLACE="${i%.*}"
-    DEPENDABLE_WORKING_DIRECTORY="${TO_REPLACE//"$DEPENDENCIES"/Cache}" # FIXME: <--- Bad substitution
+    REPO="$DEPENDABLE_REPOSITORY"
+
+    NAME=$(echo "$REPO" | sed 's:.*/::' | grep -o -P '(?<=).*(?=.git)')
+    
+    if [ "$NAME" = "" ]; then
+
+        NAME=$(echo "$REPO" | sed 's:.*/::' | grep -o -P '(?<=/).*(?=)')
+    fi
+
+    if [ "$NAME" = "" ]; then
+
+        NAME=$(echo "$REPO" | grep -o -P '(?<=https:/).*' | sed 's:.*/::')
+    fi
+
+    if [ "$NAME" = "" ]; then
+
+        echo "ERROR: No name obtained for repo '$REPO'"
+        exit 1
+    fi
+
+    DEPENDABLE_WORKING_DIRECTORY="Cache/$NAME"
+
     echo "Dependency working directory: $DEPENDABLE_WORKING_DIRECTORY"
 
     WORKING_DIRECTORY="$DEPENDENCIES_WORKING_DIRECTORY/$DEPENDABLE_WORKING_DIRECTORY"
