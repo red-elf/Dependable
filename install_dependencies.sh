@@ -215,7 +215,7 @@ if test -e "$DEPENDENCIES"; then
         echo "$FORMATTED_DEPENDENCY" >>"$DEPENDENCIES_PROCESSED"
       fi
 
-      if "$CLONE" = true; then
+      if [ "$CLONE" == true ]; then
 
         echo "Initializing the dependency to: '$WORKING_DIRECTORY'"
 
