@@ -8,7 +8,7 @@ Define and install project dependencies.
 - In the root of the project create a directory called 'Dependencies'
 - Optional: In the root of the project create the 'ABOUT.txt'
 - For each dependency create a separate .sh file with the content that satisfies the required form
-- Execute: `sh Dependable/install_dependencies.sh` from the root of your project
+- Execute: `bash Dependable/install_dependencies.sh` from the root of your project
 
 ## The dependency shell scripts
 

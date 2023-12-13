@@ -88,8 +88,8 @@ GET_VERSIONS() {
     exit 1
   fi
 
-  CURRENT="$(sh "$CURRENT_SCRIPT")"
-  INSTALLED="$(sh "$INSTALLED_SCRIPT")"
+  CURRENT="$(bash "$CURRENT_SCRIPT")"
+  INSTALLED="$(bash "$INSTALLED_SCRIPT")"
 }
 
 UNSET_DEPENDABLE_VARIABLES() {
@@ -271,7 +271,7 @@ if test -e "$DEPENDENCIES"; then
 
                 if test -e "Upstreams"; then
 
-                  if sh "$UPSTREAMS_SCRIPT"; then
+                  if bash "$UPSTREAMS_SCRIPT"; then
 
                     echo "Upstreamable completed"
 
@@ -283,7 +283,7 @@ if test -e "$DEPENDENCIES"; then
                 fi
               fi
 
-              if sh "$INSTALL_SCRIPT"; then
+              if bash "$INSTALL_SCRIPT"; then
 
                 cd "$HERE" && \
                   echo "The dependency initialized to: '$WORKING_DIRECTORY'"
@@ -333,7 +333,7 @@ if test -e "$DEPENDENCIES"; then
 
                 if test -e "Upstreams"; then
 
-                  if sh "$UPSTREAMS_SCRIPT"; then
+                  if bash "$UPSTREAMS_SCRIPT"; then
 
                     echo "Upstreamable completed"
 
@@ -345,7 +345,7 @@ if test -e "$DEPENDENCIES"; then
                 fi
               fi
 
-              if sh "$INSTALL_SCRIPT"; then
+              if bash "$INSTALL_SCRIPT"; then
 
                 cd "$HERE" && \
                   echo "The dependency at '$WORKING_DIRECTORY' has been updated"
