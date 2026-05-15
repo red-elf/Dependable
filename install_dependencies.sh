@@ -269,7 +269,9 @@ if test -e "$DEPENDENCIES"; then
 
               if test -e "$UPSTREAMS_SCRIPT"; then
 
-                if test -e "Upstreams"; then
+                # Helix Constitution §11.4.29: either 'upstreams/' (preferred)
+                # or legacy 'Upstreams/' satisfies the recipes-directory check.
+                if test -e "upstreams" || test -e "Upstreams"; then
 
                   if bash "$UPSTREAMS_SCRIPT"; then
 
@@ -331,7 +333,9 @@ if test -e "$DEPENDENCIES"; then
 
               if test -e "$UPSTREAMS_SCRIPT"; then
 
-                if test -e "Upstreams"; then
+                # Helix Constitution §11.4.29: either 'upstreams/' (preferred)
+                # or legacy 'Upstreams/' satisfies the recipes-directory check.
+                if test -e "upstreams" || test -e "Upstreams"; then
 
                   if bash "$UPSTREAMS_SCRIPT"; then
 
